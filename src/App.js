@@ -1,14 +1,11 @@
 import logo from './logo.svg';
+
 import './App.css';
 import { useEffect, useState } from 'react';
 import {Form, Card, Icon, Image } from 'semantic-ui-react';
 
 function App() {
-  // const [userName, setUserName] = useState('')
-  // const [followers, setFollowers] = useState('')
-  // const [following, setFollowing] = useState('')
-  // const [avatar_url, setAvatar] = useState('')
-  const [data, setDataList] = useState('')
+  const [data, setDataList] = useState([])
   const [userInput, setUserInput] = useState('')
   const [error, setError] = useState(null)
 
@@ -16,23 +13,19 @@ function App() {
     fetch(`https://api.github.com/search/users?q=andjela-kostic}`)
     .then(res=>res.json())
     .then(data=>{
-      setData(data)
+      if (data) setData(data)
     })
+    .catch(console.error)
   }, [])
 
   const setData = ( data) => {
-    //setName(name)
-    //setUserName(login)
-    //setFollowers(followers_url)
-    //setFollowing(following_url)
-    //setAvatar(avatar_url)
     console.log(data.items)
     setDataList(data.items)
 
   }
 
   const handleSearch = (e) => {
-      setUserInput(e.target.value)
+    setUserInput(e.target.value) 
   }
 
   const handleSubmit= () =>{
@@ -43,17 +36,11 @@ function App() {
       setData(data)
     })
   }
-  function printList(data){
-    const row=[]
-    if(data){
-      data.forEach(d => {
-        row.push( 
-            <p>{login}</p>
-      )});
-    }
-    
-    return row
-  }
+
+  // const returnProfile = () => {
+  //   setUserInput(userInput)
+  //  // handleSubmit()
+  // }
 
   return (
     <div>
@@ -66,36 +53,17 @@ function App() {
             </Form.Group>
           </Form>
       </div>
-      <div className='list'>
-        {printList(data)}
-        
+      <div className='cart'>
+        {data ? data.map(el=>
+        <div className='cartItem'>
+          <img src={el.avatar_url} />
+          <p>{el.login}</p>
+          <button>View</button>
+        </div>)
+         : "" }
       </div>
       <div className='card'>
-      {/* <Card>
-        <Image src={avatar_url} wrapped ui={false} />
-        <Card.Content>
-          <Card.Header>{userName}</Card.Header>
 
-        </Card.Content>
-        <Card.Content extra>
-          <a>
-            <Icon name='user' />
-            {followers} followers
-          </a>
-        </Card.Content>
-        <Card.Content extra>
-          <a>
-            <Icon name='user' />
-            {following} following
-          </a>
-        </Card.Content>
-        <Card.Content extra>
-          <a>
-            <Icon name='user' />
-            
-          </a>
-        </Card.Content>
-  </Card> */}
       </div>
     </div>
   );
